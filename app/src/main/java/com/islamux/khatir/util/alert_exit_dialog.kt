@@ -1,6 +1,5 @@
 package com.islamux.khatir.util
 
-import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -11,16 +10,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.islamux.khatir.data.static.AppStrings
 import com.islamux.khatir.ui.theme.AmiriFontFamily
+import kotlin.system.exitProcess
 
 @Composable
 fun BackPressHandlerWithExitDialog() {
     var showDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     BackHandler {
         showDialog = true
@@ -45,9 +43,7 @@ fun BackPressHandlerWithExitDialog() {
                 )
             },
             confirmButton = {
-                TextButton(onClick = {
-                    (context as? Activity)?.finishAffinity()
-                }) {
+                TextButton(onClick = { exitProcess(0) }) {
                     Text(
                         text = AppStrings.alertYes,
                         fontFamily = AmiriFontFamily,

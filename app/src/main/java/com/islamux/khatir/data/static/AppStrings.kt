@@ -35,11 +35,6 @@ object AppStrings {
     const val decreaseFontLabel = "تصغير الخط"
     const val increaseFontLabel = "تكبير الخط"
     const val menuLabel = "القائمة"
-    const val contactIconLabel = "اتصال"
-    const val shareIconLabel = "مشاركة"
-    const val scrollUpLabel = "السحب للأعلى"
-    const val chapterIconLabel = "فصل"
-    const val navigateLabel = "انتقال"
 
     fun chapterTitle(id: String): String = when (id) {
         "pre" -> "خواطر متفرقة حول الدين والحياة"
