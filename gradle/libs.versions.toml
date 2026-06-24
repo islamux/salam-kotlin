@@ -10,8 +10,6 @@ kotlin = "2.2.10"
 composeBom = "2026.02.01"
 navigationCompose = "2.9.0"
 serializationJson = "1.8.1"
-mockk = "1.13.9"
-coroutinesTest = "1.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,8 +33,6 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

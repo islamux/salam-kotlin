@@ -75,6 +75,8 @@ fun ReaderScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val useGoldenTitle = chapterId == "pre" || chapterId == "final"
+
     val pagerState = rememberPagerState(
         initialPage = initialPage.coerceIn(0, (uiState.pages.size - 1).coerceAtLeast(0)),
         pageCount = { uiState.pages.size.coerceAtLeast(1) }
@@ -123,7 +125,7 @@ fun ReaderScreen(
                             text = AppStrings.chapterTitle(chapterId),
                             fontFamily = AmiriFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = AppColors.golden
+                            color = if (useGoldenTitle) AppColors.golden else AppColors.golden
                         )
                     }
                 },
