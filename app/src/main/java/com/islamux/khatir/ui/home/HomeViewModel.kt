@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 
 data class HomeUiState(
     val chapters: List<Chapter> = emptyList(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val error: String? = null
 )
 
 class HomeViewModel(private val repository: KhatiraRepository) : ViewModel() {
@@ -29,7 +30,7 @@ class HomeViewModel(private val repository: KhatiraRepository) : ViewModel() {
                 val chapters = repository.getAllChapters()
                 _uiState.value = HomeUiState(chapters = chapters, isLoading = false)
             } catch (e: Exception) {
-                _uiState.value = HomeUiState(isLoading = false)
+                _uiState.value = HomeUiState(isLoading = false, error = e.message ?: "Unknown error")
             }
         }
     }

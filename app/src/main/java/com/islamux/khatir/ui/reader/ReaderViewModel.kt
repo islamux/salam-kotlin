@@ -33,10 +33,10 @@ class ReaderViewModel(
                         isLoading = false
                     )
                 } else {
-                    _uiState.value = ReaderUiState(error = "Chapter not found")
+                    _uiState.value = ReaderUiState(error = "Chapter not found", isLoading = false)
                 }
             } catch (e: Exception) {
-                _uiState.value = ReaderUiState(error = e.message)
+                _uiState.value = ReaderUiState(error = e.message, isLoading = false)
             }
         }
     }

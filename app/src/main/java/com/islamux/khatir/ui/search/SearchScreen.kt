@@ -168,7 +168,7 @@ fun SearchResultItem(
         Spacer(modifier = Modifier.width(8.dp))
         Icon(
             Icons.AutoMirrored.Filled.ArrowForward,
-            contentDescription = null,
+            contentDescription = AppStrings.navigateLabel,
             tint = AppColors.grey,
             modifier = Modifier.width(16.dp)
         )
