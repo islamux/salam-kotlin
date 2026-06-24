@@ -94,7 +94,7 @@ fun HomeScreen(
                 ) {
                     Icon(
                         Icons.Default.Phone,
-                        contentDescription = null,
+                        contentDescription = AppStrings.contactIconLabel,
                         tint = AppColors.black
                     )
                     Spacer(modifier = Modifier.width(16.dp))
@@ -122,7 +122,7 @@ fun HomeScreen(
                 ) {
                     Icon(
                         Icons.Default.Share,
-                        contentDescription = null,
+                        contentDescription = AppStrings.shareIconLabel,
                         tint = AppColors.black
                     )
                     Spacer(modifier = Modifier.width(16.dp))
@@ -197,6 +197,17 @@ fun HomeScreen(
                 ) {
                     CircularProgressIndicator()
                 }
+            } else if (uiState.error != null) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.error ?: AppStrings.unknownError,
+                        fontFamily = AmiriFontFamily,
+                        color = androidx.compose.ui.graphics.Color.Red
+                    )
+                }
             } else {
                 Box(
                     modifier = Modifier
@@ -218,7 +229,7 @@ fun HomeScreen(
                     ) {
                         Icon(
                             Icons.Default.ArrowUpward,
-                            contentDescription = null,
+                            contentDescription = AppStrings.scrollUpLabel,
                             tint = AppColors.golden,
                             modifier = Modifier.width(36.dp)
                         )
@@ -264,11 +275,11 @@ fun ChapterButton(chapter: Chapter, onClick: () -> Unit) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                Icons.AutoMirrored.Filled.MenuBook,
-                contentDescription = null,
-                tint = AppColors.black
-            )
+                Icon(
+                    Icons.AutoMirrored.Filled.MenuBook,
+                    contentDescription = AppStrings.chapterIconLabel,
+                    tint = AppColors.black
+                )
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = AppStrings.chapterTitle(chapter.id),
