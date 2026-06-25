@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.islamux.khatir.di.AppModule
@@ -122,7 +124,7 @@ fun ReaderScreen(
                             )
                         }
                         Text(
-                            text = AppStrings.chapterTitle(chapterId),
+                            text = AppStrings.topBarTitle(chapterId),
                             fontFamily = AmiriFontFamily,
                             fontWeight = FontWeight.Bold,
                             color = if (useGoldenTitle) AppColors.golden else AppColors.golden
@@ -216,7 +218,7 @@ fun ReaderScreen(
                         painter = painterResource(R.drawable.bg_reader),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
+                        contentScale = ContentScale.Crop
                     )
 
                     Column(
@@ -224,17 +226,18 @@ fun ReaderScreen(
                     ) {
                         HorizontalPager(
                             state = pagerState,
-                            reverseLayout = true,
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxWidth()
                         ) { pageIndex ->
                             val page = uiState.pages.getOrNull(pageIndex)
                             if (page != null) {
-                                PageContent(
-                                    page = page,
-                                    fontSize = uiState.fontSize
-                                )
+                                key(uiState.fontSize) {
+                                    PageContent(
+                                        page = page,
+                                        fontSize = uiState.fontSize
+                                    )
+                                }
                             }
                         }
 
@@ -273,16 +276,6 @@ fun ReaderScreen(
                                     fontSize = 16.sp
                                 )
                             }
-                            Text(
-                                text = "${pagerState.currentPage + 1} / ${uiState.pages.size}",
-                                fontFamily = AmiriFontFamily,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp),
-                                textAlign = TextAlign.Center
-                            )
                         }
                     }
                 }
@@ -301,7 +294,7 @@ fun PageContent(page: Page, fontSize: Float) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .verticalScroll(scrollState)
             .padding(horizontal = 32.dp, vertical = 60.dp)
     ) {
@@ -339,7 +332,7 @@ fun PageContent(page: Page, fontSize: Float) {
                             text = page.texts[textIndex],
                             fontFamily = AmiriFontFamily,
                             fontSize = fontSize.sp,
-                            lineHeight = (fontSize * 1.6).sp,
+                            lineHeight = 1.6f.em,
                             color = AppColors.black,
                             textAlign = TextAlign.Justify,
                             modifier = Modifier.padding(vertical = 4.dp)

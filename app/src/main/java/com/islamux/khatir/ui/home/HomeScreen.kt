@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -25,6 +26,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -207,13 +210,13 @@ fun HomeScreen(
                         painter = painterResource(R.drawable.bg_home),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
+                        contentScale = ContentScale.Crop
                     )
 
                     Column(
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 48.dp, end = 16.dp),
+                            .align(Alignment.TopCenter)
+                            .padding(top = 56.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
@@ -233,16 +236,33 @@ fun HomeScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(top = 160.dp, bottom = 130.dp),
+                            .padding(top = 120.dp, bottom = 130.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        uiState.chapters.forEach { chapter ->
-                            ChapterButton(
-                                chapter = chapter,
-                                onClick = { onChapterClick(chapter.id) }
-                            )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .heightIn(max = 480.dp),
+                            colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
+                            shape = RoundedCornerShape(20.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(vertical = 8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                uiState.chapters.forEach { chapter ->
+                                    ChapterButton(
+                                        chapter = chapter,
+                                        onClick = { onChapterClick(chapter.id) }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -271,7 +291,7 @@ fun ChapterButton(chapter: Chapter, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(5.dp))
             Text(
-                text = AppStrings.chapterTitle(chapter.id),
+                                text = AppStrings.chapterTitle(chapter.id),
                 fontFamily = AmiriFontFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = 17.sp
