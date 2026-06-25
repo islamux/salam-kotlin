@@ -1,11 +1,6 @@
 # Kotlin Concepts Masterclass
 
-> This document is **identical** to the Athkarix project's `01-kotlin-concepts.md` — both apps use the same Kotlin features (Compose, StateFlow, coroutines, data classes, objects, etc.).
->
-> Read the full version at:
-> **[`../../../../Athkarix-android/docs/juniros/01-kotlin-concepts.md`](../../../../Athkarix-android/docs/juniros/01-kotlin-concepts.md)**
->
-> Below is the Salam-specific summary with real code examples from this codebase.
+A summary of every Kotlin language feature used in this codebase, with real Salamm examples.
 
 ## Salam-Specific Examples
 
@@ -63,7 +58,7 @@ Every ViewModel follows the exact same pattern:
 ```kotlin
 class HomeViewModel(private val repository: KhatiraRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())          // private mutable
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()   // public read-only
+    val uiState: StateFlow<HomeUiState> = _uiState                  // public read-only
 }
 ```
 
