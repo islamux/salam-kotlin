@@ -14,5 +14,3 @@
 .cxx
 local.properties
 kls_database.db
-keystore.properties
-*.jks

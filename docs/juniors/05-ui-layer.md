@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
 ### AppColors — Color Constants
 
-**File**: `ui/theme/AppColors.kt`
+**File**: `ui/theme/Color.kt` (defines `AppColors` object)
 
 ```kotlin
 object AppColors {

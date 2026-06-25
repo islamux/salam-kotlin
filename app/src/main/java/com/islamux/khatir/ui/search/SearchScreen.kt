@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -19,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -140,37 +142,46 @@ fun SearchResultItem(
     subtitle: String,
     onClick: () -> Unit
 ) {
-    Row(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 12.dp, horizontal = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(vertical = 4.dp),
+        color = AppColors.white,
+        shape = RoundedCornerShape(12.dp),
+        tonalElevation = 1.dp
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = matchedText,
-                fontFamily = AmiriFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = AppColors.black,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = subtitle,
-                fontFamily = AmiriFontFamily,
-                fontSize = 12.sp,
-                color = AppColors.grey
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(vertical = 12.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = matchedText,
+                    fontFamily = AmiriFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = AppColors.black,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = subtitle,
+                    fontFamily = AmiriFontFamily,
+                    fontSize = 12.sp,
+                    color = AppColors.grey
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = null,
+                tint = AppColors.golden,
+                modifier = Modifier.width(16.dp)
             )
         }
-        Spacer(modifier = Modifier.width(8.dp))
-        Icon(
-            Icons.AutoMirrored.Filled.ArrowForward,
-            contentDescription = AppStrings.navigateLabel,
-            tint = AppColors.grey,
-            modifier = Modifier.width(16.dp)
-        )
     }
 }
