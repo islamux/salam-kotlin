@@ -10,12 +10,12 @@ Salam has **3 ViewModels**, one per screen. Unlike Athkarix (which has a base Vi
 
 ## The Backing Property Pattern
 
-Every ViewModel uses the same `private val _xxx = MutableStateFlow(...)` / `public val xxx = _xxx.asStateFlow()` pattern:
+Every ViewModel uses the same backing-property pattern:
 
 ```kotlin
 class ExampleViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ExampleState())
-    val uiState: StateFlow<ExampleState> = _uiState.asStateFlow()
+    val uiState: StateFlow<ExampleState> = _uiState
 }
 ```
 
@@ -23,7 +23,7 @@ class ExampleViewModel : ViewModel() {
 |---|----------|------|------------|---------|
 | 1 | `_uiState` | `MutableStateFlow<State>` | `private` | ViewModel writes to this |
 | 2 | `uiState` | `StateFlow<State>` | `public` | UI reads this (read-only) |
-| `.asStateFlow()` | — | — | — | Removes the `set` capability |
+| Type annotation | — | — | — | `StateFlow<>` type prevents `set` on the public side |
 
 **Why?** The UI cannot corrupt state accidentally:
 ```kotlin
@@ -46,7 +46,7 @@ data class HomeUiState(
 class HomeViewModel(private val repository: KhatiraRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<HomeUiState> = _uiState
 
     init { loadChapters() }
 
@@ -92,7 +92,7 @@ class ReaderViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ReaderUiState())
-    val uiState: StateFlow<ReaderUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<ReaderUiState> = _uiState
 
     init { loadChapter() }
 }

@@ -204,7 +204,7 @@ The `key = chapterId` in ReaderScreen ensures that navigating between different 
 MainActivity.kt
     │
     ▼
-SalamTheme  ← AppColors.kt, Type.kt, Theme.kt
+SalamTheme  ← Color.kt, Type.kt, Theme.kt
     │
     ▼
 NavGraph  ← Routes.kt, AppModule.kt

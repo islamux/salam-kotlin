@@ -53,7 +53,7 @@ com.islamux.khatir/
 │   ├── home/            ← HomeScreen + HomeViewModel
 │   ├── reader/          ← ReaderScreen + ReaderViewModel
 │   ├── search/          ← SearchScreen + SearchViewModel
-│   └── theme/           ← AppColors, Type (ContentStyles), Theme
+│   └── theme/           ← Color (AppColors), Type (ContentStyles), Theme
 ├── data/
 │   ├── model/           ← KhatiraContent, Chapter, Page
 │   ├── repository/      ← KhatiraRepository, JsonKhatiraRepository
@@ -78,4 +78,4 @@ com.islamux.khatir/
 3. **Arabic-First** — RTL layout (`reverseLayout = true` in HorizontalPager), Arabic text throughout.
 4. **Never put logic in a `@Composable`** — Composables map state to UI and pass events up.
 5. **Never import `android.*` or `compose.*` in a ViewModel** — ViewModels are pure Kotlin logic.
-6. **Always use `SharePlus.instance.share(ShareParams(...))` for sharing** (Flutter), `Intent.ACTION_SEND` (Android).
+6. **Use `Intent.ACTION_SEND` for sharing** — built share intent with text content. See `WhatsAppUtil.kt`.

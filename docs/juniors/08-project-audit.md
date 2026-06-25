@@ -34,7 +34,7 @@ Full codebase analysis covering pros, bugs, performance, over-engineering, and a
 | # | Issue | File | Impact |
 |---|-------|------|--------|
 | 1 | **Search recomputes diacritic removal on every keystroke** — all 532 pages are scanned and normalized on every `onValueChange`. No memoization. | `SearchViewModel.kt:61-99` | Noticeable on low-end devices with rapid typing |
-| 2 | **JSON parsed eagerly in memory** — 825KB `khatira_content.json` is fully loaded and cached on first access | `JsonKhatiraRepository.kt:15-23` | Negligible (< 5MB heap) |
+| 2 | **JSON parsed eagerly in memory** — 848KB `khatira_content.json` is fully loaded and cached on first access | `JsonKhatiraRepository.kt:15-23` | Negligible (< 5MB heap) |
 | 3 | **Background images at full resolution** — `bg_home.jpg` and `bg_reader.jpg` loaded without downsampling | HomeScreen, ReaderScreen | Minor memory impact |
 
 ---
@@ -53,7 +53,7 @@ Full codebase analysis covering pros, bugs, performance, over-engineering, and a
 
 | # | Issue | Why it matters |
 |---|-------|----------------|
-| 1 | **Zero unit tests** — no `src/test/` directory exists | Any regression goes undetected |
+| 1 | **Minimal unit tests** — only `JsonKhatiraRepositoryTest.kt` exists | Most ViewModel logic has no test coverage |
 | 2 | **No process death handling** — ViewModels are created fresh on process restart (not using `SavedStateHandle`) | User loses reading position if Android kills the app |
 | 3 | **No loading state in ReaderScreen** — `ReaderUiState` has `isLoading: Boolean` but the screen doesn't show a progress indicator | Brief blank screen while JSON loads |
 | 4 | **ViewModels survive via `viewModel()` Compose function but not `SavedStateHandle`** — rotation is fine, process death is not | Minor — most users don't experience process death mid-reading |
