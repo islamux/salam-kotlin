@@ -81,8 +81,13 @@ To update the app's content, replace `app/src/main/assets/khatira_content.json` 
 
 ## Learning Resources
 
-If you're new to Kotlin or Android development, see the [junior learning guides](docs/juniors/) for a step-by-step introduction to the codebase, testing, and architecture.
+- **Junior guides** — Step-by-step introduction to Kotlin, Android, and the codebase: [docs/juniors/](docs/juniors/)
+- **Release audit** — Production readiness assessment: [docs/release-audit.md](docs/release-audit.md)
 
 ## License
 
-<!-- TODO: Add license information -->
+Copyright (C) 2026 Islamux
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [GNU General Public License](LICENSE) for more details.
