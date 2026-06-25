@@ -16,12 +16,13 @@
 | How does navigation work? What is `AppModule` and why no Hilt? | [`07-navigation-and-di.md`](./07-navigation-and-di.md) |
 | What's the current state of the codebase? Known issues? | [`08-project-audit.md`](./08-project-audit.md) |
 | How do I write a local JVM unit test (no emulator)? | [`09-unit-testing-guide.md`](./09-unit-testing-guide.md) |
+| What order should I write tests in to learn step by step? | [`11-unit-testing-learning-plan.md`](./11-unit-testing-learning-plan.md) |
 
 ## Canonical homes for re-explained topics
 
 | Topic | Canonical home |
 |---|---|
-| `StateFlow` / `MutableStateFlow` / `asStateFlow()` | `04-viewmodel-deep-dive.md` (Deep Dive: MutableStateFlow vs StateFlow) |
+| `StateFlow` / `MutableStateFlow` / backing property | `04-viewmodel-deep-dive.md` (Deep Dive: MutableStateFlow vs StateFlow) |
 | Manual `AppModule` DI (singleton vs fresh, no-Hilt rationale) | `07-navigation-and-di.md` (Dependency Injection: AppModule) |
 | Routes + NavHost + navArgument + single-Activity | `07-navigation-and-di.md` (Navigation: Routes) |
 | `AppColors` / golden theme | `05-ui-layer.md` (Theme) |
@@ -30,8 +31,8 @@
 
 ## Adding a new doc
 
-1. Decide which of the 10 files (00–09) is its canonical home.
-2. If you must add a new file, number it `10-…` and add a row to the **Core questions** table above.
+1. Decide which existing file (00–11) is its canonical home.
+2. If you must add a new file, number it `12-…` and add a row to the **Core questions** table above.
 3. If you find yourself restating a topic that already has a canonical home, replace your restatement with a one-line cross-reference link.
 
 > **Note:** Kotlin language concepts (`01`) and Flutter→Compose mapping (`02`) share identical content with the [Athkarix project docs](https://github.com/athkarix/athkarix-android/tree/main/docs/juniros). Differences are called out inline where they exist.

@@ -61,7 +61,7 @@ salamkotlin/
 │   │   │   │   ├── repository/        ← JsonKhatiraRepository
 │   │   │   │   └── static/            ← AppStrings
 │   │   │   └── util/                  ← Utilities (diacritics, whatsapp, alerts)
-│   │   ├── assets/                    ← khatira_content.json (532 pages, 825KB)
+│   │   ├── assets/                    ← khatira_content.json (~532 pages, 848KB)
 │   │   └── res/                       ← Resources (images, fonts, theme)
 │   └── build.gradle.kts               ← App-level build config
 ├── build.gradle.kts                   ← Root build config
@@ -74,7 +74,7 @@ salamkotlin/
 If you want to understand how the app works from end to end, read these files in order:
 
 1. `MainActivity.kt` — Where the app starts
-2. `ui/theme/AppColors.kt` and `Theme.kt` — The color scheme and typography
+2. `ui/theme/Color.kt` and `Theme.kt` — The color scheme and typography
 3. `navigation/NavGraph.kt` — How all screens connect
 4. `di/AppModule.kt` — How dependencies are wired
 5. `data/repository/JsonKhatiraRepository.kt` — Where all content lives
