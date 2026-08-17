@@ -73,7 +73,7 @@ app/src/main/java/com/islamux/khatir/
 
 ## Data
 
-Content is stored in `assets/khatira_content.json` (~850KB) and parsed at runtime. The JSON contains 34 chapters with over 500 pages of Arabic text, including Quranic verses (ayahs). Each page has a `order` field that defines the rendering sequence of its elements.
+Content is stored in `assets/khatira_content.json` (~855KB) and parsed at runtime. The JSON contains 34 chapters with 533 pages of Arabic text, including Quranic verses (ayahs). Each page has a `order` field that defines the rendering sequence of its elements.
 
 ## Content Updates
 

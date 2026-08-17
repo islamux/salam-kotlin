@@ -33,8 +33,8 @@ Full codebase analysis covering pros, bugs, performance, over-engineering, and a
 
 | # | Issue | File | Impact |
 |---|-------|------|--------|
-| 1 | **Search recomputes diacritic removal on every keystroke** — all 532 pages are scanned and normalized on every `onValueChange`. No memoization. | `SearchViewModel.kt:61-99` | Noticeable on low-end devices with rapid typing |
-| 2 | **JSON parsed eagerly in memory** — 848KB `khatira_content.json` is fully loaded and cached on first access | `JsonKhatiraRepository.kt:15-23` | Negligible (< 5MB heap) |
+| 1 | **Search recomputes diacritic removal on every keystroke** — all 533 pages are scanned and normalized on every `onValueChange`. No memoization. | `SearchViewModel.kt:61-99` | Noticeable on low-end devices with rapid typing |
+| 2 | **JSON parsed eagerly in memory** — ~855KB `khatira_content.json` is fully loaded and cached on first access | `JsonKhatiraRepository.kt:15-23` | Negligible (< 5MB heap) |
 | 3 | **Background images at full resolution** — `bg_home.jpg` and `bg_reader.jpg` loaded without downsampling | HomeScreen, ReaderScreen | Minor memory impact |
 
 ---

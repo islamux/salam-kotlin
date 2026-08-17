@@ -142,14 +142,14 @@ Centralized Arabic strings matching the Flutter app exactly. The `chapterTitle()
 
 ## 5. JSON File Format
 
-**File**: `assets/khatira_content.json` (848KB, ~532 pages)
+**File**: `assets/khatira_content.json` (~855KB, 533 pages)
 
 ```json
 {
   "chapters": [
     {
       "id": "pre",
-      "orderIndex": 0,
+      "order_index": 0,
       "title": "المقدمة",
       "pages": [
         {

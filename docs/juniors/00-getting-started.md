@@ -61,7 +61,7 @@ salamkotlin/
 │   │   │   │   ├── repository/        ← JsonKhatiraRepository
 │   │   │   │   └── static/            ← AppStrings
 │   │   │   └── util/                  ← Utilities (diacritics, whatsapp, alerts)
-│   │   ├── assets/                    ← khatira_content.json (~532 pages, 848KB)
+│   │   ├── assets/                    ← khatira_content.json (533 pages, ~855KB)
 │   │   └── res/                       ← Resources (images, fonts, theme)
 │   └── build.gradle.kts               ← App-level build config
 ├── build.gradle.kts                   ← Root build config
