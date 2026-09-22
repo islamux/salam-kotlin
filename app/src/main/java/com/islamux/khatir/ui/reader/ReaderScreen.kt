@@ -2,13 +2,18 @@ package com.islamux.khatir.ui.reader
 
 import android.content.Intent
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -42,6 +47,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -255,6 +266,7 @@ fun ReaderScreen(
                                     fontFamily = AmiriFontFamily,
                                     fontSize = 16.sp
                                 )
+                                val interactionSource = remember { MutableInteractionSource() }
                                 Slider(
                                     value = pagerState.currentPage.toFloat(),
                                     onValueChange = { target ->
@@ -268,6 +280,8 @@ fun ReaderScreen(
                                         inactiveTrackColor = AppColors.grey,
                                         thumbColor = AppColors.black
                                     ),
+                                    interactionSource = interactionSource,
+                                    thumb = { ShinyBlackThumb(interactionSource) },
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
@@ -281,6 +295,50 @@ fun ReaderScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ShinyBlackThumb(interactionSource: MutableInteractionSource) {
+    val pressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (pressed) 1.1f else 1f, label = "shinyThumbScale")
+    Canvas(
+        modifier = Modifier
+            .size(24.dp)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+    ) {
+        val radius = this.size.minDimension / 2f
+        val highlightCenter = Offset(this.size.width * 0.4f, this.size.height * 0.38f)
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFF6E6E6E),
+                    Color(0xFF3A3A3A),
+                    AppColors.black
+                ),
+                center = highlightCenter,
+                radius = radius * 1.25f
+            ),
+            radius = radius
+        )
+        drawOval(
+            color = Color.White.copy(alpha = 0.55f),
+            topLeft = Offset(this.size.width * 0.22f, this.size.height * 0.15f),
+            size = Size(this.size.width * 0.4f, this.size.height * 0.24f)
+        )
+        drawOval(
+            color = Color.White.copy(alpha = 0.14f),
+            topLeft = Offset(this.size.width * 0.56f, this.size.height * 0.5f),
+            size = Size(this.size.width * 0.3f, this.size.height * 0.18f)
+        )
+        drawCircle(
+            color = Color(0xFF242424),
+            radius = radius,
+            style = Stroke(width = 1.dp.toPx())
+        )
     }
 }
 
