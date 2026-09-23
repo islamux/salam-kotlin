@@ -10,5 +10,9 @@
 - `WhatsAppUtil` kept: actively used (HomeScreen chat entry point) — audit claim of dead code was stale.
 
 ## Remaining
-- [ ] ViewModel tests: `ReaderViewModel`, `SearchViewModel` (MockK + `StandardTestDispatcher` + `runTest`, per AGENTS.md).
-- [ ] Final gates: `./gradlew assembleDebug testDebugUnitTest assembleRelease`.
+- [x] ViewModel tests: `ReaderViewModel`, `SearchViewModel` (MockK + `StandardTestDispatcher` + `runTest`, per AGENTS.md). Tests caught a real bug: `ReaderUiState(error=…)` kept `isLoading=true`, so Reader error screens never rendered — fixed in `ReaderViewModel`.
+- [x] Final gates: `./gradlew assembleDebug testDebugUnitTest assembleRelease` — BUILD SUCCESSFUL.
+
+## Backlog ideas (unprioritized)
+- `SearchViewModel.loadContent` swallows exceptions silently — consider surfacing an error state like Home/Reader.
+- `SearchUiState` has no `error` field yet (see above).
