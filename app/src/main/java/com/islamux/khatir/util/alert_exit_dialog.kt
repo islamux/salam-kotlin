@@ -25,7 +25,8 @@ import androidx.compose.ui.unit.sp
 import com.islamux.khatir.data.static.AppStrings
 import com.islamux.khatir.ui.theme.AmiriFontFamily
 import com.islamux.khatir.ui.theme.AppColors
-import kotlin.system.exitProcess
+import android.app.Activity
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun BackPressHandlerWithExitDialog() {
@@ -34,6 +35,9 @@ fun BackPressHandlerWithExitDialog() {
     BackHandler {
         showDialog = true
     }
+
+    val context = LocalContext.current
+    val activity = context as? Activity
 
     if (showDialog) {
         AlertDialog(
@@ -67,7 +71,7 @@ fun BackPressHandlerWithExitDialog() {
             },
             confirmButton = {
                 TextButton(
-                    onClick = { exitProcess(0) },
+                    onClick = { activity?.finishAffinity() },
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = Color(0xFFD32F2F)
                     )
@@ -98,3 +102,4 @@ fun BackPressHandlerWithExitDialog() {
         )
     }
 }
+

@@ -193,7 +193,20 @@ fun HomeScreen(
                 )
             }
         ) { padding ->
-            if (uiState.isLoading) {
+            if (uiState.error != null) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = uiState.error!!,
+                            fontFamily = AmiriFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = AppColors.golden
+                        )
+                    }
+                } else if (uiState.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
