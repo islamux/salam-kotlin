@@ -14,3 +14,7 @@
 .cxx
 local.properties
 kls_database.db
+graphify-out/
+.superpowers/
+app/salam-release.jks
+keystore.properties

@@ -5,13 +5,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.islamux.khatir.data.model.Chapter
 import com.islamux.khatir.data.repository.KhatiraRepository
+import com.islamux.khatir.data.static.AppStrings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 data class HomeUiState(
     val chapters: List<Chapter> = emptyList(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val error: String? = null
 )
 
 class HomeViewModel(private val repository: KhatiraRepository) : ViewModel() {
@@ -27,9 +29,9 @@ class HomeViewModel(private val repository: KhatiraRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 val chapters = repository.getAllChapters()
-                _uiState.value = HomeUiState(chapters = chapters, isLoading = false)
+                _uiState.value = HomeUiState(chapters = chapters, isLoading = false, error = null)
             } catch (e: Exception) {
-                _uiState.value = HomeUiState(isLoading = false)
+                _uiState.value = HomeUiState(isLoading = false, error = e.message ?: AppStrings.unknownError)
             }
         }
     }

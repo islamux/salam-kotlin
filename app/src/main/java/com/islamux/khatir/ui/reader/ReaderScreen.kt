@@ -1,8 +1,8 @@
 package com.islamux.khatir.ui.reader
 
-import android.content.Intent
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -21,7 +19,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,7 +35,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,18 +42,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.islamux.khatir.di.AppModule
 import com.islamux.khatir.R
-import com.islamux.khatir.data.model.Page
 import com.islamux.khatir.data.static.AppStrings
 import com.islamux.khatir.ui.theme.AmiriFontFamily
 import com.islamux.khatir.ui.theme.AppColors
-import com.islamux.khatir.ui.theme.ContentStyles
+import com.islamux.khatir.ui.reader.components.PageContent
+import com.islamux.khatir.ui.reader.components.ShinyBlackThumb
+import com.islamux.khatir.util.ShareUtil
 import kotlinx.coroutines.launch
 
 
@@ -77,7 +72,6 @@ fun ReaderScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val useGoldenTitle = chapterId == "pre" || chapterId == "final"
 
     val pagerState = rememberPagerState(
         initialPage = initialPage.coerceIn(0, (uiState.pages.size - 1).coerceAtLeast(0)),
@@ -106,14 +100,7 @@ fun ReaderScreen(
                         IconButton(onClick = {
                             viewModel.getShareText().let { text ->
                                 if (text.isNotBlank()) {
-                                    val sendIntent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, text)
-                                        type = "text/plain"
-                                    }
-                                    context.startActivity(
-                                        Intent.createChooser(sendIntent, AppStrings.shareLabel)
-                                    )
+                                    ShareUtil.shareText(context, text, AppStrings.shareLabel)
                                 }
                             }
                         }) {
@@ -127,7 +114,7 @@ fun ReaderScreen(
                             text = AppStrings.topBarTitle(chapterId),
                             fontFamily = AmiriFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = if (useGoldenTitle) AppColors.golden else AppColors.golden
+                            color = AppColors.golden
                         )
                     }
                 },
@@ -255,6 +242,7 @@ fun ReaderScreen(
                                     fontFamily = AmiriFontFamily,
                                     fontSize = 16.sp
                                 )
+                                val interactionSource = remember { MutableInteractionSource() }
                                 Slider(
                                     value = pagerState.currentPage.toFloat(),
                                     onValueChange = { target ->
@@ -268,6 +256,8 @@ fun ReaderScreen(
                                         inactiveTrackColor = AppColors.grey,
                                         thumbColor = AppColors.black
                                     ),
+                                    interactionSource = interactionSource,
+                                    thumb = { ShinyBlackThumb(interactionSource) },
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
@@ -277,92 +267,6 @@ fun ReaderScreen(
                                 )
                             }
                         }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun PageContent(page: Page, fontSize: Float) {
-    val scrollState = rememberScrollState()
-    var titleIndex by remember { mutableIntStateOf(0) }
-    var subtitleIndex by remember { mutableIntStateOf(0) }
-    var textIndex by remember { mutableIntStateOf(0) }
-    var ayahIndex by remember { mutableIntStateOf(0) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState)
-            .padding(horizontal = 32.dp, vertical = 60.dp)
-    ) {
-        for (field in page.order) {
-            when (field) {
-                "titles" -> {
-                    if (titleIndex < page.titles.size) {
-                        Text(
-                            text = page.titles[titleIndex],
-                            style = ContentStyles.title.copy(fontSize = (fontSize + 4).sp),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                        )
-                        titleIndex++
-                    }
-                }
-                "subtitles" -> {
-                    if (subtitleIndex < page.subtitles.size) {
-                        Text(
-                            text = page.subtitles[subtitleIndex],
-                            style = ContentStyles.subtitle.copy(fontSize = (fontSize + 2).sp),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 6.dp)
-                        )
-                        subtitleIndex++
-                    }
-                }
-                "texts" -> {
-                    if (textIndex < page.texts.size) {
-                        Text(
-                            text = page.texts[textIndex],
-                            fontFamily = AmiriFontFamily,
-                            fontSize = fontSize.sp,
-                            lineHeight = 1.6f.em,
-                            color = AppColors.black,
-                            textAlign = TextAlign.Justify,
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        )
-                        textIndex++
-                    }
-                }
-                "ayahs" -> {
-                    if (ayahIndex < page.ayahs.size) {
-                        Text(
-                            text = page.ayahs[ayahIndex],
-                            style = ContentStyles.ayahHadith.copy(fontSize = (fontSize + 2).sp),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                        )
-                        ayahIndex++
-                    }
-                }
-                "footer" -> {
-                    page.footer?.let { footer ->
-                        Text(
-                            text = footer,
-                            style = ContentStyles.footer.copy(fontSize = (fontSize - 4).sp),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                        )
                     }
                 }
             }
