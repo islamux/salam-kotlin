@@ -12,12 +12,8 @@ object AppModule {
 
     private var repository: KhatiraRepository? = null
 
-    fun provideRepository(context: Context): KhatiraRepository {
-        if (repository == null) {
-            repository = JsonKhatiraRepository(context.applicationContext)
-        }
-        return repository!!
-    }
+    fun provideRepository(context: Context): KhatiraRepository =
+        repository ?: JsonKhatiraRepository(context.applicationContext).also { repository = it }
 
     fun provideHomeViewModelFactory(context: Context): ViewModelProvider.Factory {
         return HomeViewModel.Factory(provideRepository(context))

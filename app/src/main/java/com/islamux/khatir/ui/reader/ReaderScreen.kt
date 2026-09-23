@@ -1,6 +1,5 @@
 package com.islamux.khatir.ui.reader
 
-import android.content.Intent
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -43,7 +42,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,6 +66,7 @@ import com.islamux.khatir.data.model.Page
 import com.islamux.khatir.data.static.AppStrings
 import com.islamux.khatir.ui.theme.AmiriFontFamily
 import com.islamux.khatir.ui.theme.AppColors
+import com.islamux.khatir.util.ShareUtil
 import com.islamux.khatir.ui.theme.ContentStyles
 import kotlinx.coroutines.launch
 
@@ -88,7 +87,6 @@ fun ReaderScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val useGoldenTitle = chapterId == "pre" || chapterId == "final"
 
     val pagerState = rememberPagerState(
         initialPage = initialPage.coerceIn(0, (uiState.pages.size - 1).coerceAtLeast(0)),
@@ -117,14 +115,7 @@ fun ReaderScreen(
                         IconButton(onClick = {
                             viewModel.getShareText().let { text ->
                                 if (text.isNotBlank()) {
-                                    val sendIntent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, text)
-                                        type = "text/plain"
-                                    }
-                                    context.startActivity(
-                                        Intent.createChooser(sendIntent, AppStrings.shareLabel)
-                                    )
+                                    ShareUtil.shareText(context, text, AppStrings.shareLabel)
                                 }
                             }
                         }) {
@@ -138,7 +129,7 @@ fun ReaderScreen(
                             text = AppStrings.topBarTitle(chapterId),
                             fontFamily = AmiriFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = if (useGoldenTitle) AppColors.golden else AppColors.golden
+                            color = AppColors.golden
                         )
                     }
                 },

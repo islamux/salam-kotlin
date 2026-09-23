@@ -1,6 +1,5 @@
 package com.islamux.khatir.ui.home
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,6 +60,7 @@ import com.islamux.khatir.data.static.AppStrings
 import com.islamux.khatir.ui.theme.AmiriFontFamily
 import com.islamux.khatir.ui.theme.AppColors
 import com.islamux.khatir.util.BackPressHandlerWithExitDialog
+import com.islamux.khatir.util.ShareUtil
 import com.islamux.khatir.util.WhatsAppUtil
 import kotlinx.coroutines.launch
 
@@ -113,12 +113,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            val shareIntent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, AppStrings.homeShareText)
-                                type = "text/plain"
-                            }
-                            context.startActivity(Intent.createChooser(shareIntent, AppStrings.shareLabel))
+                            ShareUtil.shareText(context, AppStrings.homeShareText, AppStrings.shareLabel)
                         }
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -170,12 +165,7 @@ fun HomeScreen(
                             )
                         }
                         TextButton(onClick = {
-                            val shareIntent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, AppStrings.homeShareText)
-                                type = "text/plain"
-                            }
-                            context.startActivity(Intent.createChooser(shareIntent, AppStrings.shareLabel))
+                            ShareUtil.shareText(context, AppStrings.homeShareText, AppStrings.shareLabel)
                         }) {
                             Text(
                                 text = AppStrings.homeShareButton,
