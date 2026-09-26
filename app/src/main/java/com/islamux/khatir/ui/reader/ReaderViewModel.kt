@@ -127,10 +127,10 @@ class ReaderViewModel(
      * walked the lists in their own hardcoded order, a page would read correctly
      * on screen but be garbled when shared.
      *
-     * - `mutableListOf<String>()` builds the result piece by piece.
-     * - `forEach { parts.add(it) }` appends every element of a list field.
-     * - `page.footer?.let { ... }` adds the footer only when it exists.
-     * - `joinToString("\n\n")` separates pieces with a blank line.
+     * - `mutableListOf<String>()` builds the result piece by piece, because the
+     *   number of pieces is only known once `order` has been walked.
+     * - `page.footer?.let { ... }` adds the footer only when it exists, since it
+     *   is the one optional field on a page.
      *
      * The test `getShareText builds from page order` proves the order is honoured,
      * not the declaration order of the properties.
