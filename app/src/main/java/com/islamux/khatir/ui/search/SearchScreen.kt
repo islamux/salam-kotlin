@@ -40,6 +40,18 @@ import com.islamux.khatir.data.static.AppStrings
 import com.islamux.khatir.ui.theme.AmiriFontFamily
 import com.islamux.khatir.ui.theme.AppColors
 
+/**
+ * The search screen: a text field, a result count and a list of hits.
+ *
+ * The Compose patterns are the ones explained in HomeScreen.kt (@Composable,
+ * collectAsState, hoisted callbacks) — read that file first. Two things are
+ * specific to this screen:
+ *  - the text field is CONTROLLED: it renders uiState.query and pushes every
+ *    keystroke back through viewModel.search(it), so the ViewModel stays the
+ *    single source of truth for what has been typed,
+ *  - LazyColumn is used instead of a Column because a search can return hundreds
+ *    of hits, and LazyColumn only composes the rows that are actually visible.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
@@ -80,6 +92,8 @@ fun SearchScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
+                // value + onValueChange is the controlled-component pattern: show
+                // the state, send the change back. No local copy of the text exists.
                 value = uiState.query,
                 onValueChange = { viewModel.search(it) },
                 modifier = Modifier.fillMaxWidth(),
@@ -89,6 +103,9 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Four mutually exclusive states, in priority order: nothing typed yet
+            // (a centred prompt), still searching, searched with no hits, and
+            // finally the results. Driven entirely by the ViewModel's state.
             when {
                 uiState.query.isBlank() -> {
                     Spacer(modifier = Modifier.weight(1f))
@@ -125,7 +142,13 @@ fun SearchScreen(
                         items(uiState.results) { result ->
                             SearchResultItem(
                                 matchedText = result.matchedText,
+                                // String template: chapter title, then WHICH kind of
+                                // field matched, via the fieldLabel mapping.
                                 subtitle = "${result.chapter.title} - ${fieldLabel(result.matchedField)}",
+                                // Tapping a hit opens that CHAPTER. Note that
+                                // result.pageIndex is available but not passed on
+                                // here, so the reader opens at its first page rather
+                                // than jumping to the exact match.
                                 onClick = { onChapterClick(result.chapter.id) }
                             )
                         }
@@ -136,6 +159,12 @@ fun SearchScreen(
     }
 }
 
+/**
+ * One row in the results list: the matching text on top, "chapter - field" below.
+ *
+ * Stateless and parameter-driven, like ChapterButton on the home screen: it knows
+ * nothing about chapters or search, so it can be reused or previewed anywhere.
+ */
 @Composable
 fun SearchResultItem(
     matchedText: String,
@@ -164,6 +193,9 @@ fun SearchResultItem(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = AppColors.black,
+                    // A match can be a long paragraph, so the row is capped at two
+                    // lines and the rest becomes an ellipsis — one screenful of
+                    // results stays readable.
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )

@@ -1,4 +1,4 @@
-# Salamm — خواطر إيمانية
+# Salam — خواطر إيمانية
 
 An Islamic spiritual content reader for Android. Browse and search a collection of Arabic spiritual reflections (خواطر) organized into chapters and pages, with adjustable font sizes and sharing.
 

@@ -40,8 +40,9 @@ app/src/main/java/com/islamux/khatir/
 │   ├── home/           — HomeScreen, HomeViewModel
 │   ├── reader/         — ReaderScreen, ReaderViewModel
 │   ├── search/         — SearchScreen, SearchViewModel
-│   └── theme/          — Color, Theme, Type, Fonts
-└── util/               — remove_search_diacritics, whatsapp_util, alert_exit_dialog
+│   ├── theme/          — Color, Theme, Type, Fonts
+│   └── util/           — ShareUtil, WhatsAppUtil, AlertExitDialog, RemoveSearchDiacritics
+└── (reader also has components/ — PageContent, ShinyBlackThumb)
 ```
 
 ## Commands
