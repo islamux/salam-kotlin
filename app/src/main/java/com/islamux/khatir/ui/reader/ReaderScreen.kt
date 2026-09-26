@@ -57,6 +57,18 @@ import kotlinx.coroutines.launch
 
 
 
+/**
+ * The reading screen: one chapter, swipeable pages, font controls, share.
+ *
+ * The MVVM wiring is identical to HomeScreen (read HomeScreen.kt and
+ * HomeViewModel.kt first — the @Composable, collectAsState and hoisting comments
+ * there cover this file too). What is new here:
+ *  - HorizontalPager: a built-in swipeable page container driven by pagerState.
+ *  - key(chapterId) on the viewModel call: a SEPARATE ViewModel per chapter.
+ *    Navigating from reader/A to reader/B reuses this composable, so without the
+ *    key the second chapter would inherit the first chapter's state.
+ *  - LaunchedEffect: the bridge for one-shot suspend side effects (see below).
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReaderScreen(
@@ -74,14 +86,31 @@ fun ReaderScreen(
     val scope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState(
+        // coerceIn clamps the requested page into the valid range, and
+        // coerceAtLeast(0) handles the moment before any page has loaded, when
+        // pages.size - 1 would be -1 and the range would be invalid.
         initialPage = initialPage.coerceIn(0, (uiState.pages.size - 1).coerceAtLeast(0)),
+        // At least one page keeps the pager valid while loading; the real count
+        // arrives with the data and the pager updates itself.
         pageCount = { uiState.pages.size.coerceAtLeast(1) }
     )
 
+    // LaunchedEffect(key) { }: runs its suspend body when it ENTERS composition,
+    // re-runs when the key changes, and CANCELS it when it leaves. That makes it
+    // the right tool for a one-shot effect like "tell the ViewModel which page is
+    // showing". It has to be an effect and not part of the composable BODY,
+    // because a body is re-run on every recomposition — `LaunchedEffect` is the
+    // sanctioned place for a side effect that should happen once.
+
+    // Keeps the ViewModel's currentPageIndex in step with the pager. The key is
+    // the page being shown, so this fires once per swipe.
     LaunchedEffect(pagerState.currentPage) {
         viewModel.navigateToPage(pagerState.currentPage)
     }
 
+    // Scrolls to the requested page once, AFTER loading finishes. The key is
+    // isLoading, so this body runs on the transition to "loaded" and then stops —
+    // it must not fight the user's own swiping on every recomposition.
     LaunchedEffect(uiState.isLoading) {
         if (!uiState.isLoading && uiState.pages.isNotEmpty() && initialPage > 0) {
             pagerState.scrollToPage(
@@ -98,6 +127,9 @@ fun ReaderScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(onClick = {
+                            // Share asks the ViewModel for the text (the logic lives
+                            // there) and only opens the sheet when there is something
+                            // to share — an empty string means the pages never loaded.
                             viewModel.getShareText().let { text ->
                                 if (text.isNotBlank()) {
                                     ShareUtil.shareText(context, text, AppStrings.shareLabel)
@@ -128,6 +160,8 @@ fun ReaderScreen(
                     }
                 },
                 actions = {
+                    // Font A- / A+ buttons: they only CALL the ViewModel, which owns
+                    // the 21f..37f bounds — no limit logic in the UI.
                     IconButton(onClick = { viewModel.decreaseFontSize() }) {
                         Icon(
                             Icons.Default.Remove,
@@ -163,6 +197,9 @@ fun ReaderScreen(
             )
         }
     ) { padding ->
+        // Four states this time (HomeScreen had three): loading, error, an empty
+        // chapter, and the reader itself. `when` without a subject picks the first
+        // matching branch, so the order is the priority order.
         when {
             uiState.isLoading -> {
                 Box(
@@ -219,6 +256,12 @@ fun ReaderScreen(
                         ) { pageIndex ->
                             val page = uiState.pages.getOrNull(pageIndex)
                             if (page != null) {
+                                // key(fontSize) forces PageContent to be BUILT AGAIN
+                                // whenever the font size changes. That matters because
+                                // PageContent keeps `remember`ed per-field indices
+                                // internally: reusing the instance would resume those
+                                // counters mid-list and the page would render with
+                                // elements missing or repeated.
                                 key(uiState.fontSize) {
                                     PageContent(
                                         page = page,
@@ -246,16 +289,24 @@ fun ReaderScreen(
                                 Slider(
                                     value = pagerState.currentPage.toFloat(),
                                     onValueChange = { target ->
+                                        // scrollToPage is a SUSPEND function (it
+                                        // animates), so the slider's non-suspend
+                                        // callback has to launch it on `scope`.
                                         scope.launch {
                                             pagerState.scrollToPage(target.toInt())
                                         }
                                     },
+                                    // coerceAtLeast(0) keeps the range valid before
+                                    // the pages arrive, when size - 1 would be -1.
                                     valueRange = 0f..(uiState.pages.size - 1).coerceAtLeast(0).toFloat(),
                                     colors = SliderDefaults.colors(
                                         activeTrackColor = AppColors.black,
                                         inactiveTrackColor = AppColors.grey,
                                         thumbColor = AppColors.black
                                     ),
+                                    // The SAME interactionSource is handed to the
+                                    // Slider and to our custom thumb, which is how
+                                    // the thumb learns it is being pressed.
                                     interactionSource = interactionSource,
                                     thumb = { ShinyBlackThumb(interactionSource) },
                                     modifier = Modifier.weight(1f)
