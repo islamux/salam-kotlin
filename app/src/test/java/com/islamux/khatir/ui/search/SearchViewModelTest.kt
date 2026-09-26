@@ -19,6 +19,14 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
+/**
+ * Tests SearchViewModel on the JVM against a small in-memory book, with the
+ * standard dispatcher setup explained in HomeViewModelErrorStateTest (read that
+ * file first for setMain / advanceUntilIdle / resetMain).
+ *
+ * The star of this suite is `search matches diacritic-insensitively`, which pins
+ * the feature the whole screen exists for.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
@@ -34,6 +42,9 @@ class SearchViewModelTest {
         Dispatchers.resetMain()
     }
 
+    // A tiny hand-built book: one chapter, two pages. Note page 0's text carries
+    // harakat ("السَّلَام") while page 1's does not — that contrast is what makes
+    // the diacritic test below meaningful.
     private fun content() = KhatiraContent(
         version = 1,
         generatedAt = "2026-01-01",
@@ -65,6 +76,8 @@ class SearchViewModelTest {
 
     @Test
     fun `search matches diacritic-insensitively`() = runTest(dispatcher) {
+        // THE core promise of this screen: the user types the bare word "سلام",
+        // without any harakat, and it still finds the content that has them.
         val repository = mockk<KhatiraRepository>()
         coEvery { repository.getContent() } returns content()
         val vm = SearchViewModel(repository)
@@ -76,8 +89,12 @@ class SearchViewModelTest {
         val results = vm.uiState.value.results
         assertEquals(1, results.size)
         assertEquals("texts", results[0].matchedField)
+        // The stored match is the ORIGINAL text with its harakat, not the
+        // normalized form — normalization is for comparing, never for display.
         assertEquals("السَّلَام عليكم", results[0].matchedText)
         assertEquals(0, results[0].pageIndex)
+        // The query is echoed back exactly as typed, harakat-free, so the text
+        // field does not fight the user's input.
         assertEquals("سلام", vm.uiState.value.query)
         assertEquals(false, vm.uiState.value.isSearching)
     }
@@ -98,6 +115,8 @@ class SearchViewModelTest {
 
     @Test
     fun `blank query clears results`() = runTest(dispatcher) {
+        // Proves the isBlank() guard: a whitespace-only query is treated as "no
+        // query" (results cleared) while the typed text is still preserved.
         val repository = mockk<KhatiraRepository>()
         coEvery { repository.getContent() } returns content()
         val vm = SearchViewModel(repository)
@@ -116,6 +135,9 @@ class SearchViewModelTest {
 
     @Test
     fun `content load failure leaves chapters empty without crashing`() = runTest(dispatcher) {
+        // Documents the deliberate design choice in loadContent: the exception is
+        // swallowed, so a broken content file cannot crash the app. The cost is
+        // that the user gets an empty result list rather than an error message.
         val repository = mockk<KhatiraRepository>()
         coEvery { repository.getContent() } throws RuntimeException("boom")
 
