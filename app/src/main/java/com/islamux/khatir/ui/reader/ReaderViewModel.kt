@@ -53,9 +53,11 @@ class ReaderViewModel(
                     _uiState.value = ReaderUiState(error = "Chapter not found", isLoading = false)
                 }
             } catch (e: Exception) {
-                // Note: unlike HomeViewModel there is no `?:` fallback here, so an
-                // exception without a message would publish a null error and the
-                // screen would fall back to its own generic message.
+                // Unlike HomeViewModel there is no `?:` fallback here, so an
+                // exception carrying no message publishes `error = null`. Because
+                // ReaderScreen's error branch is guarded by `error != null`, the
+                // reader then falls through to its "no content" branch instead —
+                // which is also why that screen's `?:` fallback is unreachable.
                 _uiState.value = ReaderUiState(error = e.message, isLoading = false)
             }
         }
@@ -67,7 +69,8 @@ class ReaderViewModel(
      * `index in pages.indices` is the bounds check: swiping past the last page, or
      * a bad page number arriving from a deep link, is silently dropped rather than
      * crashing on an out-of-bounds access. Verified by the test
-     * `navigateToPage clamps to valid indices`.
+     * `navigateToPage clamps to valid indices` — despite its name, it asserts the
+     * page is IGNORED, not clamped.
      *
      * `copy()` publishes a new state with only this one field changed — the
      * previously loaded chapter and pages are carried over untouched.

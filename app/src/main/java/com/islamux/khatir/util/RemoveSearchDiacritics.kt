@@ -5,8 +5,8 @@ package com.islamux.khatir.util
  * whitespace.
  *
  * How it works, in one line: harakat (the fatha, kasra, damma and friends) and
- * every symbol live in DIFFERENT Unicode blocks from the letters, so filtering to
- * the letters block \u0621..\u064A (hamza through yaa) drops the diacritics
+ * every symbol sit at HIGHER code points than the letters, so keeping only the
+ * letters range \u0621..\u064A (hamza through yaa) drops the diacritics
  * automatically. That is cheaper and less error-prone than listing every
  * diacritic character to remove.
  *

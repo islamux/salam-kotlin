@@ -114,7 +114,8 @@ object AppStrings {
     }
 
     /**
-     * Result count for the search screen, e.g. 12 نتيجة.
+     * Result count for the search screen — a number followed by the Arabic word
+     * for "result". The Arabic itself lives in the string below, never in a comment.
      * `$count` is a string template — Kotlin interpolates the value directly,
      * no toString() call needed.
      */

@@ -36,9 +36,9 @@ data class SearchResult(
  * What SearchScreen draws.
  *
  * Note what is NOT here: there is no `error` field, unlike HomeUiState and
- * ReaderUiState. A failed content load therefore leaves the list empty and the
- * screen simply shows "no results" — search degrades quietly instead of showing
- * an error (see loadContent below).
+ * ReaderUiState. A failed content load therefore leaves the list empty, so the
+ * screen shows its usual prompt and then "no results" once the user types —
+ * search degrades quietly instead of showing an error (see loadContent below).
  */
 data class SearchUiState(
     val query: String = "",

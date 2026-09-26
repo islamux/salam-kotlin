@@ -21,7 +21,7 @@ data class ReaderUiState(
     val chapter: Chapter? = null,
     /** Its pages — the pager renders exactly this list. */
     val pages: List<Page> = emptyList(),
-    /** Which page is showing, 0-based (matches Page.index). */
+    /** Which page is showing — the pager's 0-based position in [pages]. */
     val currentPageIndex: Int = 0,
     /** Body text size in sp. Bounded to 21f..37f by ReaderViewModel. */
     val fontSize: Float = 21f,

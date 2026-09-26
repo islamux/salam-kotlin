@@ -17,7 +17,13 @@ import com.islamux.khatir.data.model.KhatiraContent
  * implementation (`: KhatiraRepository`) supplies the how.
  */
 interface KhatiraRepository {
-    /** The whole book. `suspend` = may do slow IO, so it runs off the main thread. */
+    /**
+     * The whole book.
+     *
+     * `suspend` = the call may need to pause, so it must be made from a
+     * coroutine. It says NOTHING about which thread runs it — this project's
+     * implementations are called from `viewModelScope`, which is the UI thread.
+     */
     suspend fun getContent(): KhatiraContent
 
     /** One chapter by id, or null when the id does not exist. */

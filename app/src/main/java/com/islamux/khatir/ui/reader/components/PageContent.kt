@@ -45,7 +45,8 @@ import com.islamux.khatir.ui.theme.ContentStyles
  *
  * Each content type gets its own style: titles, subtitles, ayahs and the footer
  * are centered, body texts are justified, and the offsets from [fontSize]
- * (+4, +2, 0, -4) keep that visual hierarchy at ANY size the reader picks.
+ * (+4 titles, +2 subtitles and ayahs, 0 body, -4 footer) keep that visual
+ * hierarchy at ANY size the reader picks.
  */
 @Composable
 fun PageContent(page: Page, fontSize: Float) {
@@ -129,7 +130,9 @@ fun PageContent(page: Page, fontSize: Float) {
                 "footer" -> {
                     // Unlike the lists, the footer is a single optional String, so
                     // `?.let` renders it only when it exists — and it never
-                    // advances any counter, because it can appear only once.
+                    // advances any counter, because in the shipped content
+                    // `order` lists it at most once. Nothing enforces that though:
+                    // a `footer` listed twice would simply render twice.
                     page.footer?.let { footer ->
                         Text(
                             text = footer,

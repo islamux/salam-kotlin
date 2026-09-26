@@ -49,9 +49,16 @@ class HomeViewModel(private val repository: KhatiraRepository) : ViewModel() {
 
     private fun loadChapters() {
         viewModelScope.launch {
-            // Coroutines read like sequential code but run off the main thread, and
-            // the suspend repository call may do IO. Everything sits inside
-            // try/catch so ANY failure becomes error state instead of a crash.
+            // Coroutines read like sequential code, but they run on whatever
+            // dispatcher the scope uses — and viewModelScope is Dispatchers.Main,
+            // so this body executes ON the UI thread. `suspend` means a function
+            // may PAUSE at any point; it does NOT move work to a background
+            // thread. Moving it would need withContext(Dispatchers.IO), which
+            // this project does not do anywhere yet — so the first content load
+            // (reading and parsing the whole JSON) does block the UI thread.
+            //
+            // Everything sits inside try/catch so ANY failure becomes error state
+            // instead of a crash.
             try {
                 val chapters = repository.getAllChapters()
                 _uiState.value = HomeUiState(chapters = chapters, isLoading = false, error = null)

@@ -29,8 +29,9 @@ object WhatsAppUtil {
             }
             context.startActivity(intent)
         } catch (_: ActivityNotFoundException) {
-            // The fallback needs no special handling: a plain browser intent, which
-            // every device can satisfy.
+            // The fallback needs no special handling: a plain browser intent, so
+            // any device with a browser can satisfy it. (This second startActivity is
+            // not itself wrapped in a try/catch.)
             val fallbackIntent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(WHATSAPP_PLAY_STORE_URL)
             }

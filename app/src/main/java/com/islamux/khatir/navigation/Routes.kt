@@ -19,8 +19,8 @@ object Routes {
      * readerRoute("pre", 3) -> "reader/pre?initialPage=3".
      *
      * Always navigate through this helper rather than concatenating strings by
-     * hand: the format must match the READER pattern exactly or the route will
-     * not match and the app silently does nothing.
+     * hand: the format must match the READER pattern exactly, or `navigate` throws
+     * IllegalArgumentException ("destination ... cannot be found") at the call site.
      */
     fun readerRoute(chapterId: String, initialPage: Int = 0) =
         "reader/$chapterId?initialPage=$initialPage"

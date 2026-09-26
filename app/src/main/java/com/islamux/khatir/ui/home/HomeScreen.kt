@@ -98,7 +98,8 @@ fun HomeScreen(
     // without `remember` it would reset (snap shut) on every re-render.
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     // Coroutines started in `scope` are cancelled when this composable leaves the
-    // composition — used to open and close the drawer, both suspend calls.
+    // composition — used here to open the drawer, which is a suspend call. (Closing
+    // is the user's swipe, so there is no close() call in this file.)
     val scope = rememberCoroutineScope()
 
     // Intercepts the system Back button and asks for confirmation before leaving

@@ -21,7 +21,8 @@ import com.islamux.khatir.ui.search.SearchViewModel
  *
  * How a dependency reaches a ViewModel: screen asks AppModule for a Factory ->
  * AppModule builds the repository -> the Factory hands both to the ViewModel's
- * constructor. Nobody calls `new` on a ViewModel directly.
+ * constructor. Nobody constructs a ViewModel by hand at a call site — Kotlin has
+ * no `new` keyword, and the Factory's `create` is the only place one is built.
  */
 object AppModule {
 

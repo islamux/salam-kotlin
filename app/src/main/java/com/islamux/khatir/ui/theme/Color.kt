@@ -3,7 +3,9 @@ package com.islamux.khatir.ui.theme
 import androidx.compose.ui.graphics.Color
 
 /**
- * The app's palette, in one place — change a colour here and every screen follows.
+ * The app's shared palette — change a colour here and the screens that reference
+ * it follow. (Not every colour in the app lives here: the dark scheme in Theme.kt
+ * and a few accents hardcode their own literals.)
  *
  * Kotlin `object` = a single shared instance (see di/AppModule.kt for the same
  * idea), which is exactly what a palette of constants wants.

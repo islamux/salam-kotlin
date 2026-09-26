@@ -15,8 +15,10 @@ import org.junit.Test
  * `classLoader.getResourceAsStream("khatira_content.json")` finds the very same
  * file the app ships.
  *
- * Backtick test names (`fun \`some sentence\``) are legal in Kotlin and read far
- * better than camelCase when a test fails in CI output.
+ * Backtick test names are legal in Kotlin: wrap the whole sentence in backticks
+ * after `fun` — `fun parses the real JSON asset` becomes
+ * fun `parses the real JSON asset`. They read far better than camelCase when a
+ * test fails in CI output.
  */
 class JsonKhatiraRepositoryTest {
 

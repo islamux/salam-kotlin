@@ -98,8 +98,9 @@ fun ReaderScreen(
     // LaunchedEffect(key) { }: runs its suspend body when it ENTERS composition,
     // re-runs when the key changes, and CANCELS it when it leaves. That makes it
     // the right tool for a one-shot effect like "tell the ViewModel which page is
-    // showing" — writing to the ViewModel directly during composition would
-    // trigger a recomposition loop.
+    // showing". It has to be an effect and not part of the composable BODY,
+    // because a body is re-run on every recomposition — `LaunchedEffect` is the
+    // sanctioned place for a side effect that should happen once.
 
     // Keeps the ViewModel's currentPageIndex in step with the pager. The key is
     // the page being shown, so this fires once per swipe.

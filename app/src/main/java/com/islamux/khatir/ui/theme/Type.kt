@@ -46,10 +46,11 @@ val Typography = Typography(
 )
 
 /**
- * The app's own text styles, one per content type in the reader: page titles,
+ * The app's own text styles, one per STYLED field in the reader: page titles,
  * subtitles, verses/hadith and the footer. PageContent.kt picks the right one for
- * each field it renders, which is what keeps the reading hierarchy consistent
- * across every page of the book.
+ * each of those, which is what keeps the reading hierarchy consistent across every
+ * page of the book. (The body `texts` field is the exception — it sets its own font
+ * family, size and line height inline rather than using a style from here.)
  *
  * THE KEY DIFFERENCE from [Typography]: these styles deliberately carry NO font
  * size. The reader lets the user choose the text size (21f..37f, owned by
