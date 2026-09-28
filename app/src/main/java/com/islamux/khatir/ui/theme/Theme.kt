@@ -16,12 +16,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.graphics.Color
 
 /**
- * Material's role-based colour slots. `primary` is the brand colour, while
- * `onPrimary` is the colour that must be readable ON it — that pairing is what
- * guarantees legible buttons, so the two are always chosen together.
- *
- * Both schemes lead with the same gold and black: the app keeps its identity in
- * dark mode instead of inverting into a generic look.
+ * Material's role-based colour slots. `primary` is the brand colour and `onPrimary`
+ * must be readable on it, so the two are always chosen together.
  */
 private val LightColorScheme = lightColorScheme(
     primary = AppColors.golden,
@@ -57,17 +53,12 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 /**
- * The root theme, applied ONCE in MainActivity and inherited by every screen
- * below it. Screens never call this themselves — they just read
- * `MaterialTheme.colorScheme` and get the right values for free.
+ * The root theme, applied ONCE in MainActivity and inherited by every screen below.
  *
- * @param darkTheme defaults to the system setting, so the app follows the
- * phone's light/dark preference automatically.
- * @param dynamicColor when true, Android 12+ takes the colours from the user's
- * wallpaper. It is OFF by default on purpose: this app's gold-on-black identity
- * is part of its design, and a wallpaper-derived palette would replace it.
- * @param content the UI to wrap — a lambda, so the theme applies to whatever
- * is composed inside it.
+ * @param darkTheme defaults to the system setting.
+ * @param dynamicColor off by purpose: a wallpaper palette would replace this app's
+ *   gold-on-black identity.
+ * @param content the UI to wrap.
  */
 @Composable
 fun KhatirTheme(
@@ -77,9 +68,7 @@ fun KhatirTheme(
 ) {
     // Ordered by specificity: the most specific option that applies wins.
     val colorScheme = when {
-        // Build.VERSION.SDK_INT is a runtime version check — the wallpaper colours
-        // only exist from Android 12 (S) onward, and older devices must not touch
-        // these APIs at all.
+        // Wallpaper colours exist only from Android 12, so older devices must not use these APIs.
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -88,10 +77,7 @@ fun KhatirTheme(
         else -> LightColorScheme
     }
 
-    // The app is Arabic-first, so the layout direction is forced to RTL here,
-    // once, instead of per screen. Everything laid out below then mirrors
-    // automatically: Row lays out right-to-left, and mirrored icons such as
-    // Icons.AutoMirrored.Filled.ArrowBack point the correct way.
+    // Arabic-first, so layout direction is forced to RTL once here; everything below mirrors.
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         MaterialTheme(
             colorScheme = colorScheme,

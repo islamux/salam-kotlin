@@ -22,31 +22,13 @@ import com.islamux.khatir.ui.theme.AppColors
 import com.islamux.khatir.ui.theme.ContentStyles
 
 /**
- * Renders ONE [Page] by executing the page's `order` contract (documented on
- * Page.kt): walk `order` from top to bottom and, for each field name, render the
- * NEXT unused element from the matching list.
+ * Renders one [Page] by walking its `order` (see Page.kt), using four `*Index`
+ * counters as the "already drawn from this list" memory of the walk. The counters
+ * are `remember`ed, so ReaderScreen keys this composable on font size to rebuild
+ * them fresh on a font change.
  *
- * That is why this function keeps four `*Index` counters. They are the "how many
- * have I already drawn from this list?" memory of the walk, and they are what let
- * a name appear twice in `order` (drawing two different titles) or not at all
- * (drawing none).
- *
- * Compose details worth knowing:
- *  - `by remember { mutableIntStateOf(0) }` is three ideas in one line:
- *    `remember` keeps the value across recompositions (a font-size change
- *    re-runs this function; without remember the counters would reset and the
- *    page would re-render its first title over and over),
- *    `mutableIntStateOf` makes it observable state so a change triggers
- *    recomposition, and `by` is the delegate that lets us write `titleIndex++`
- *    instead of `titleIndex.value++`.
- *  - The counters therefore only make sense for a FRESH instance. ReaderScreen
- *    wraps this composable in `key(uiState.fontSize)` so a font change builds a
- *    new one instead of resuming stale counters.
- *
- * Each content type gets its own style: titles, subtitles, ayahs and the footer
- * are centered, body texts are justified, and the offsets from [fontSize]
- * (+4 titles, +2 subtitles and ayahs, 0 body, -4 footer) keep that visual
- * hierarchy at ANY size the reader picks.
+ * Offsets from [fontSize] keep the hierarchy at any size: +4 titles, +2 subtitles
+ * and ayahs, 0 body, -4 footer.
  */
 @Composable
 fun PageContent(page: Page, fontSize: Float) {
@@ -65,9 +47,8 @@ fun PageContent(page: Page, fontSize: Float) {
         for (field in page.order) {
             when (field) {
                 "titles" -> {
-                    // Guard before indexing: a name may appear in `order` more
-                    // times than the list has elements, and `[]` on a missing
-                    // index would crash the app.
+                    // Guard before indexing: `order` may name a field more times
+                    // than the list has elements, and `[]` would crash.
                     if (titleIndex < page.titles.size) {
                         Text(
                             text = page.titles[titleIndex],
@@ -96,11 +77,9 @@ fun PageContent(page: Page, fontSize: Float) {
                 "texts" -> {
                     if (textIndex < page.texts.size) {
                         Text(
-                            // Body text: the Amiri font, justified alignment and a
-                            // 1.6em line height. Justify plus generous line height
-                            // is what keeps long Arabic paragraphs readable — `em`
-                            // means the size is RELATIVE to the text size, so the
-                            // spacing grows with the reader's font setting.
+                            // Justify plus a 1.6em line height keeps long Arabic
+                            // paragraphs readable; `em` is relative to the text size,
+                            // so spacing grows with the reader's font setting.
                             text = page.texts[textIndex],
                             fontFamily = AmiriFontFamily,
                             fontSize = fontSize.sp,
@@ -115,8 +94,8 @@ fun PageContent(page: Page, fontSize: Float) {
                 "ayahs" -> {
                     if (ayahIndex < page.ayahs.size) {
                         Text(
-                            // Verses and hadith get their own style from the
-                            // theme, so they stand apart from ordinary paragraphs.
+                            // Verses and hadith get their own theme style so they
+                            // stand apart from ordinary paragraphs.
                             text = page.ayahs[ayahIndex],
                             style = ContentStyles.ayahHadith.copy(fontSize = (fontSize + 2).sp),
                             textAlign = TextAlign.Center,
@@ -128,11 +107,9 @@ fun PageContent(page: Page, fontSize: Float) {
                     }
                 }
                 "footer" -> {
-                    // Unlike the lists, the footer is a single optional String, so
-                    // `?.let` renders it only when it exists — and it never
-                    // advances any counter, because in the shipped content
-                    // `order` lists it at most once. Nothing enforces that though:
-                    // a `footer` listed twice would simply render twice.
+                    // A single optional String, so `?.let` renders it only when it
+                    // exists; it advances no counter, so `order` listing it twice
+                    // would render it twice.
                     page.footer?.let { footer ->
                         Text(
                             text = footer,
